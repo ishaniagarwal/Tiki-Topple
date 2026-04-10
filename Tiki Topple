@@ -1221,6 +1221,7 @@ function continueAfterRound(){
   if(winner){showWin(winner);return;}
   G.round++;
   G.players.forEach(p=>{p.usedCards=[];p.cards=[...CARDS];});
+  assignSecrets();           // ← NEW: reassign fresh secret cards each round
   initBoard(); G.secretIdx=0; showNextSecret();
 }
 
@@ -1286,3 +1287,4 @@ function closeSecretCardModal(event){
 }
 setPlayers(2);
 </script>
+
