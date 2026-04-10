@@ -1,0 +1,1288 @@
+
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Baloo+2:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Keep original variable names for JS compatibility */
+  --tt-gold:#C8860A;--tt-gold-light:#FFF3D4;--tt-gold-mid:#F5C842;
+  --tt-purple:#7B4F2E;--tt-purple-light:#FFF3D4;--tt-purple-dark:#5A3520;
+  --tt-teal:#2D7A4F;--tt-teal-light:#D4F0E2;
+  --tt-surface:#FDF6E8;
+  --tt-surface2:#F5E8C8;
+  --tt-border:#D4A85A;
+  --tt-border2:#B8924A;
+  --tt-text:#3D2408;
+  --tt-muted:#8B6340;
+  --tt-radius:16px;
+  --tt-radius-sm:11px;
+  --tt-shadow:0 4px 16px rgba(80,40,0,0.18);
+  --tt-shadow-lg:0 8px 32px rgba(80,40,0,0.25);
+
+  /* Tropical palette */
+  --wood-dark:#4A2608;
+  --wood-mid:#7A4E20;
+  --wood-light:#B8884A;
+  --wood-pale:#E8C98A;
+  --sand:#FEF3CC;
+  --sand-deep:#F5E0A0;
+  --tropical-green:#1E6B2A;
+  --tropical-teal:#0E6B5C;
+  --sunset-orange:#E05A18;
+  --sunset-red:#C02E10;
+  --lemon:#F5C018;
+  --flame-orange:#FF7722;
+  --tiki-red:#CC2200;
+}
+
+/* ==== BACKGROUND: tropical scene ==== */
+body{
+  font-family:'Baloo 2',sans-serif;
+  color:var(--tt-text);
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+  background:
+    /* sun glow */
+    radial-gradient(ellipse 60% 30% at 50% 0%, rgba(255,210,80,0.55) 0%, transparent 70%),
+    /* sky-to-sea gradient */
+    linear-gradient(180deg,
+      #1B6BB0 0%, #2A8ACF 18%, #3BAAD0 32%,
+      #5EC4BC 42%, #7AD4C8 50%,
+      #E8C87A 60%, #D4943A 72%,
+      #C06828 82%, #8B3D18 100%
+    );
+}
+
+/* Jungle foliage overlay */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 80px 200px at 0% 60%, rgba(20,90,20,0.55) 0%, transparent 70%),
+    radial-gradient(ellipse 80px 200px at 100% 55%, rgba(20,90,20,0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 60px 140px at 5% 85%, rgba(10,70,10,0.45) 0%, transparent 70%),
+    radial-gradient(ellipse 60px 140px at 95% 80%, rgba(10,70,10,0.4) 0%, transparent 70%);
+}
+
+/* Sand strip at bottom */
+body::after{
+  content:'';position:fixed;bottom:0;left:0;right:0;height:90px;pointer-events:none;z-index:0;
+  background: linear-gradient(180deg, transparent 0%, rgba(220,185,100,0.6) 60%, rgba(200,160,70,0.85) 100%);
+}
+
+#app{padding:1.25rem;min-height:500px;position:relative;z-index:1}
+.screen{display:none}
+.screen.active{display:block}
+
+/* ===================== HEADER ===================== */
+.tt-header{
+  background:
+    linear-gradient(180deg, #2A1205 0%, #3D1C08 40%, #2A1205 100%);
+  padding:1.4rem 1.75rem 1.2rem;
+  border-radius:var(--tt-radius) var(--tt-radius) 0 0;
+  margin-bottom:0;
+  border-bottom:4px solid var(--wood-light);
+  position:relative;
+  overflow:hidden;
+}
+/* Carved wood grain lines */
+.tt-header::before{
+  content:'';position:absolute;inset:0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px, transparent 22px,
+    rgba(255,255,255,0.03) 22px, rgba(255,255,255,0.03) 24px
+  ), repeating-linear-gradient(
+    180deg,
+    transparent 0px, transparent 8px,
+    rgba(0,0,0,0.07) 8px, rgba(0,0,0,0.07) 9px
+  );
+  pointer-events:none;
+}
+/* Flame decoration */
+.tt-header::after{
+  content:'🔥';position:absolute;right:1.25rem;top:50%;transform:translateY(-50%);
+  font-size:2.2rem;opacity:0.35;pointer-events:none;
+  filter:drop-shadow(0 0 8px rgba(255,120,20,0.6));
+}
+
+.tt-logo{
+  font-family:'Lilita One',cursive;
+  font-size:32px;
+  color:#F5C018;
+  letter-spacing:1.5px;
+  text-shadow:
+    3px 4px 0 rgba(0,0,0,0.6),
+    0 0 25px rgba(245,192,24,0.45),
+    -1px -1px 0 rgba(255,255,255,0.1);
+  line-height:1;
+  display:flex;align-items:center;gap:10px;
+}
+.tt-logo::before{content:'🗿';font-size:26px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))}
+.tt-logo span{
+  color:#FF7722;
+  text-shadow:3px 4px 0 rgba(0,0,0,0.6), 0 0 25px rgba(255,119,34,0.5);
+}
+.tt-subtitle{
+  font-size:11.5px;color:#C49A5A;margin-top:6px;
+  font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  text-shadow:0 1px 3px rgba(0,0,0,0.4);
+}
+
+/* ===================== BODY / CARD ===================== */
+.tt-body{
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='rgba(180,130,60,0.08)'/%3E%3Ccircle cx='0' cy='0' r='1.5' fill='rgba(180,130,60,0.08)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, var(--sand) 0%, var(--sand-deep) 100%);
+  border-radius:0 0 var(--tt-radius) var(--tt-radius);
+  border:3px solid var(--wood-mid);
+  border-top:none;
+  padding:1.5rem 1.75rem 1.75rem;
+  box-shadow:0 8px 28px rgba(60,20,0,0.3), inset 0 1px 0 rgba(255,255,255,0.5);
+  position:relative;
+}
+
+.tt-wrap{max-width:540px;margin:0 auto}
+.tt-wrap-lg{max-width:1020px;margin:0 auto}
+.tt-section{margin-bottom:1.25rem}
+
+.tt-label{
+  font-family:'Fredoka One',cursive;
+  font-size:11.5px;font-weight:400;
+  color:var(--wood-dark);
+  text-transform:uppercase;letter-spacing:2px;
+  margin-bottom:10px;
+  text-shadow:0 1px 0 rgba(255,255,255,0.6);
+}
+
+/* ===================== BUTTONS ===================== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  background: linear-gradient(180deg, #EDD890 0%, #C8A840 100%);
+  border:2.5px solid var(--wood-mid);
+  border-radius:var(--tt-radius-sm);
+  padding:8px 18px;
+  font-size:13px;font-weight:800;cursor:pointer;
+  color:var(--wood-dark);
+  transition:all 0.15s ease;
+  font-family:'Baloo 2',sans-serif;
+  box-shadow:0 4px 0 #3A1A05, 0 5px 10px rgba(0,0,0,0.25);
+  text-shadow:0 1px 0 rgba(255,255,255,0.35);
+  position:relative;top:0;
+  letter-spacing:0.3px;
+}
+.btn:hover{
+  background: linear-gradient(180deg, #FFE9A8 0%, #DABC50 100%);
+  top:-2px;
+  box-shadow:0 6px 0 #3A1A05, 0 8px 16px rgba(0,0,0,0.3);
+}
+.btn:active{
+  top:3px;
+  box-shadow:0 1px 0 #3A1A05, 0 2px 4px rgba(0,0,0,0.2);
+}
+.btn:disabled{opacity:0.38;cursor:not-allowed;top:0;box-shadow:0 2px 0 var(--wood-mid)}
+
+.btn.primary{
+  background: linear-gradient(180deg, #C26020 0%, #7A3408 100%);
+  color:#FFF3D4;
+  border-color:var(--wood-dark);
+  box-shadow:0 4px 0 #200A00, 0 5px 14px rgba(0,0,0,0.35);
+  text-shadow:0 1px 3px rgba(0,0,0,0.5);
+}
+.btn.primary:hover{background:linear-gradient(180deg, #D87030 0%, #8B4410 100%)}
+
+.btn.accent{
+  background: linear-gradient(180deg, #F5C018 0%, #C89010 100%);
+  color:#2A1008;
+  border-color:#8A6808;
+  box-shadow:0 4px 0 #5A4008, 0 5px 12px rgba(0,0,0,0.28);
+  font-weight:800;
+}
+.btn.accent:hover{background:linear-gradient(180deg, #FFD030 0%, #D8A020 100%)}
+
+.btn.count-btn{
+  width:50px;height:50px;border-radius:50%;padding:0;
+  font-family:'Lilita One',cursive;font-size:19px;
+  border-width:2.5px;
+}
+.btn.count-btn.active{
+  background:linear-gradient(180deg, #C26020 0%, #7A3408 100%);
+  color:#FFF3D4;border-color:var(--wood-dark);
+  box-shadow:0 4px 0 #200A00, 0 0 0 3px rgba(245,192,24,0.55);
+}
+
+/* ===================== PLAYER SETUP ===================== */
+.player-setup-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 15px;
+  background: linear-gradient(180deg, rgba(255,252,235,0.75) 0%, rgba(225,195,130,0.5) 100%);
+  border-radius:var(--tt-radius-sm);
+  border:2px solid var(--wood-light);
+  margin-bottom:8px;
+  transition:border-color 0.15s, box-shadow 0.15s;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 5px rgba(0,0,0,0.08);
+}
+.player-setup-row:focus-within{
+  border-color:var(--wood-mid);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.8), 0 0 0 3px rgba(200,134,10,0.25)
+}
+
+.pawn-dot{
+  width:18px;height:18px;border-radius:50%;flex-shrink:0;
+  box-shadow:0 2px 5px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.45);
+  border:2px solid rgba(0,0,0,0.18);
+}
+
+.tt-input{
+  flex:1;font-size:13.5px;font-weight:700;padding:4px 0;
+  border:none;background:transparent;color:var(--wood-dark);
+  outline:none;font-family:'Baloo 2',sans-serif;
+}
+.tt-input::placeholder{color:var(--wood-light)}
+
+/* ===================== TIKI PIECES ===================== */
+.tiki-piece{
+  display:flex;align-items:center;gap:10px;
+  padding:6px 10px 6px 8px;
+  border-radius:12px;
+  cursor:pointer;
+  border:2.5px solid transparent;
+  transition:all 0.18s ease;
+  margin-bottom:5px;
+  position:relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.08) 100%);
+}
+.tiki-piece:hover{
+  transform:translateX(5px) translateY(-1px);
+  box-shadow:0 5px 14px rgba(0,0,0,0.25);
+  background: rgba(255,255,255,0.2);
+}
+.tiki-piece.selected{
+  border-color:#F5C018;
+  box-shadow:0 0 0 3px rgba(245,192,24,0.4), 0 5px 18px rgba(0,0,0,0.3);
+  transform:translateX(7px) translateY(-1px);
+  background:rgba(245,192,24,0.14);
+}
+
+/* The tiki block face — rectangular, carved look */
+.tiki-face{
+  width:44px;height:54px;
+  border-radius:7px 7px 5px 5px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Lilita One',cursive;
+  font-size:18px;flex-shrink:0;
+  position:relative;
+  box-shadow:
+    0 4px 0 rgba(0,0,0,0.35),
+    0 6px 14px rgba(0,0,0,0.3),
+    inset 0 2px 0 rgba(255,255,255,0.28),
+    inset 0 -2px 0 rgba(0,0,0,0.15);
+  overflow:hidden;
+  letter-spacing:0;
+}
+/* Carved highlight top */
+.tiki-face::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:38%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 100%);
+  border-radius:7px 7px 0 0;pointer-events:none;
+}
+/* Carved eye band */
+.tiki-face::after{
+  content:'';position:absolute;
+  top:38%;left:10%;right:10%;height:3px;
+  background:rgba(0,0,0,0.18);border-radius:2px;
+  box-shadow:0 -8px 0 rgba(0,0,0,0.14), 0 8px 0 rgba(0,0,0,0.14);
+  pointer-events:none;
+}
+
+.tiki-name{
+  font-family:'Baloo 2',sans-serif;
+  font-size:13.5px;font-weight:800;flex:1;
+  letter-spacing:0.2px;
+}
+
+.tiki-pos{
+  font-family:'Lilita One',cursive;
+  font-size:12px;
+  width:26px;height:26px;border-radius:50%;
+  background: linear-gradient(180deg, #EED090 0%, #C09040 100%);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--wood-dark);flex-shrink:0;
+  border:2px solid var(--wood-mid);
+  box-shadow:0 2px 0 rgba(0,0,0,0.25);
+}
+.tiki-pos.top3{
+  background:linear-gradient(180deg, #C8D8F8 0%, #7898E0 100%);
+  color:#18286A;border-color:#4868C0;
+}
+.tiki-pos.top1{
+  background:linear-gradient(180deg, #FFE030 0%, #C89000 100%);
+  color:#2A1408;border-color:#907008;
+  box-shadow:0 2px 0 rgba(0,0,0,0.28), 0 0 10px rgba(245,192,24,0.6);
+}
+
+/* ===================== BOARD COLUMN ===================== */
+.board-col{
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px, transparent 10px,
+      rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 12px,
+      transparent 12px, transparent 22px,
+      rgba(0,0,0,0.06) 22px, rgba(0,0,0,0.06) 24px
+    ),
+    linear-gradient(180deg, #6A3A18 0%, #4A2408 30%, #3A1C05 60%, #4A2408 100%);
+  border:3px solid #9A6830;
+  border-radius:var(--tt-radius);
+  padding:12px 10px;
+  position:relative;
+  box-shadow:
+    inset 4px 0 10px rgba(0,0,0,0.35),
+    inset -4px 0 10px rgba(0,0,0,0.35),
+    inset 0 4px 8px rgba(255,255,255,0.08),
+    0 6px 24px rgba(0,0,0,0.4);
+  overflow:hidden;
+}
+/* Top carved tiki face ornament on board */
+.board-col::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:12px;
+  background: linear-gradient(180deg, rgba(255,200,80,0.2) 0%, transparent 100%);
+  pointer-events:none;
+}
+
+.board-title{
+  font-family:'Lilita One',cursive;
+  font-size:12px;
+  text-transform:uppercase;letter-spacing:2.5px;
+  color:#F5C018;
+  text-align:center;margin-bottom:10px;
+  text-shadow:0 1px 4px rgba(0,0,0,0.6), 0 0 12px rgba(245,192,24,0.4);
+}
+
+/* ===================== ACTION CARDS ===================== */
+.card-pill{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;
+  border-radius:11px;
+  /* Card color scheme matching the physical Tiki Up/Topple/Toast cards */
+  border:2.5px solid #B8A060;
+  background: linear-gradient(160deg, #FFF5DC 0%, #F0E0A0 55%, #E0C870 100%);
+  cursor:pointer;
+  font-size:13px;font-weight:800;
+  font-family:'Baloo 2',sans-serif;
+  color:#3A1A05;
+  width:100%;text-align:left;
+  transition:all 0.16s ease;
+  box-shadow:0 4px 0 #806A28, 0 5px 10px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.9);
+  position:relative;top:0;
+}
+.card-pill:nth-child(odd){transform:rotate(-0.4deg)}
+.card-pill:nth-child(even){transform:rotate(0.4deg)}
+.card-pill:hover:not(:disabled){
+  background:linear-gradient(160deg, #FFFAE8 0%, #FFF0B8 55%, #F0D870 100%);
+  top:-3px;
+  box-shadow:0 7px 0 #806A28, 0 9px 18px rgba(0,0,0,0.24);
+  transform:rotate(0deg) scale(1.025) !important;
+  z-index:2;
+}
+.card-pill.selected{
+  border-color:#C09010;
+  background:linear-gradient(160deg, #FFFAD0 0%, #FFE870 100%);
+  color:#2A1005;
+  box-shadow:0 4px 0 #705808, 0 0 0 3px rgba(245,192,24,0.45), 0 5px 14px rgba(0,0,0,0.22);
+  transform:rotate(0deg) scale(1.03) !important;
+  z-index:2;
+}
+.card-pill:disabled{
+  opacity:0.42;cursor:not-allowed;
+  box-shadow:0 1px 0 #806A28;
+  top:0;
+}
+.card-pill:disabled span{text-decoration:line-through}
+
+/* Card icon — color-coded per card type matching physical game */
+.card-pill .card-icon{
+  width:34px;height:34px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Lilita One',cursive;
+  font-size:14px;flex-shrink:0;
+  box-shadow:0 2px 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
+  border:2px solid rgba(0,0,0,0.18);
+  color:#FFF8E0;
+}
+/* Color-code cards like physical game: Up cards=golden/brown, Topple=red, Toast=blue */
+.card-pill[data-card="Tiki 1 Up"] .card-icon{background:linear-gradient(180deg,#D4A838,#8A6B10)}
+.card-pill[data-card="Tiki 2 Up"] .card-icon{background:linear-gradient(180deg,#3A9858,#1A6830)}
+.card-pill[data-card="Tiki 3 Up"] .card-icon{background:linear-gradient(180deg,#3A78C8,#1A4890)}
+.card-pill[data-card="Tiki Topple"] .card-icon{background:linear-gradient(180deg,#D83020,#901008);color:#FFE0D8}
+.card-pill[data-card="Tiki Toast"] .card-icon{background:linear-gradient(180deg,#6858C8,#3830A0);color:#E8E0FF}
+.card-pill .card-icon{background:linear-gradient(180deg,#D4A838,#8A6B10)}
+.card-pill.selected .card-icon{
+  background:linear-gradient(180deg, #F5C018 0%, #B88808 100%);
+  color:#2A1008;border-color:rgba(0,0,0,0.2);
+}
+.card-pill:disabled .card-icon{background:linear-gradient(180deg, #B0A060 0%, #908040 100%)}
+
+/* ===================== PLAYER PANELS ===================== */
+.player-panel{
+  padding:12px 14px;
+  border-radius:var(--tt-radius-sm);
+  border:2.5px solid var(--wood-light);
+  background: linear-gradient(180deg, rgba(255,250,225,0.94) 0%, rgba(238,215,155,0.94) 100%);
+  transition:all 0.2s;
+  box-shadow:0 3px 10px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.75);
+}
+.player-panel.active{
+  border-color:#D8900A;
+  box-shadow:0 5px 18px rgba(0,0,0,0.22), 0 0 0 3px rgba(245,192,24,0.35);
+  background: linear-gradient(180deg, rgba(255,255,235,0.98) 0%, rgba(245,225,150,0.98) 100%);
+}
+
+.player-score{
+  font-family:'Lilita One',cursive;
+  font-size:28px;line-height:1;margin:3px 0 2px;
+  text-shadow:1px 2px 0 rgba(0,0,0,0.18);
+}
+.player-name-row{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.player-dot{
+  width:13px;height:13px;border-radius:50%;flex-shrink:0;
+  box-shadow:0 2px 5px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.45);
+  border:2px solid rgba(0,0,0,0.18);
+}
+.player-pip-row{display:flex;gap:4px;margin-top:6px}
+.player-pip{
+  width:11px;height:11px;border-radius:50%;
+  box-shadow:0 1px 3px rgba(0,0,0,0.22);
+  border:1.5px solid rgba(0,0,0,0.12);
+}
+
+/* ===================== LOG BOX ===================== */
+.log-box{
+  margin-top:12px;padding:12px 15px;
+  background: linear-gradient(180deg, #3A1C05 0%, #2A1205 100%);
+  border-radius:var(--tt-radius-sm);
+  font-size:12.5px;font-weight:700;
+  color:#D4AA60;
+  line-height:1.65;min-height:46px;
+  border:2.5px solid #5A2C10;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.5), 0 3px 8px rgba(0,0,0,0.25);
+  font-family:'Baloo 2',sans-serif;
+  /* Carved tablet look */
+  position:relative;
+}
+.log-box::before{
+  content:'📜';position:absolute;right:10px;top:8px;font-size:16px;opacity:0.25;
+}
+.log-box strong{color:#F5C018;text-shadow:0 1px 4px rgba(0,0,0,0.5)}
+
+/* ===================== SECRET LOCK ===================== */
+.secret-lock{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2.5rem;cursor:pointer;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(180,120,40,0.05) 0px, rgba(180,120,40,0.05) 12px,
+      transparent 12px, transparent 24px
+    ),
+    linear-gradient(180deg, var(--sand) 0%, var(--sand-deep) 100%);
+  border-radius:var(--tt-radius);
+  border:3px dashed var(--wood-light);
+  transition:all 0.22s ease;
+  margin-bottom:1rem;
+  position:relative;
+}
+.secret-lock::before{
+  content:'🌴';position:absolute;left:14px;bottom:10px;font-size:22px;opacity:0.2;
+}
+.secret-lock::after{
+  content:'🌴';position:absolute;right:14px;bottom:10px;font-size:22px;opacity:0.2;transform:scaleX(-1);
+}
+.secret-lock:hover{
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(180,120,40,0.09) 0px, rgba(180,120,40,0.09) 12px,
+      transparent 12px, transparent 24px
+    ),
+    linear-gradient(180deg, #FFF8DC 0%, #F0E4B0 100%);
+  border-color:var(--wood-mid);
+  transform:scale(1.015);
+  box-shadow:0 4px 14px rgba(0,0,0,0.12);
+}
+.lock-icon{
+  width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(180deg, #9A6030 0%, #4A2A08 100%);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+  box-shadow:0 5px 0 rgba(0,0,0,0.35), 0 7px 14px rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.2);
+  border:2.5px solid rgba(255,255,255,0.12);
+}
+.lock-svg{width:24px;height:24px;fill:#F5C018}
+
+.secret-tiki-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 15px;
+  border-radius:var(--tt-radius-sm);
+  background:linear-gradient(180deg, rgba(255,252,235,0.75) 0%, rgba(225,195,130,0.5) 100%);
+  border:2px solid var(--wood-light);
+  margin-bottom:8px;
+  box-shadow:0 2px 7px rgba(0,0,0,0.09), inset 0 1px 0 rgba(255,255,255,0.75);
+}
+.secret-badge{
+  font-family:'Fredoka One',cursive;
+  font-size:10.5px;padding:3px 10px;
+  border-radius:20px;white-space:nowrap;letter-spacing:0.6px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.18);
+}
+
+/* ===================== SCORE BAR ===================== */
+.score-bar-bg{
+  height:7px;border-radius:4px;
+  background:rgba(0,0,0,0.18);
+  margin-top:6px;overflow:hidden;
+  border:1.5px solid rgba(0,0,0,0.12);
+}
+.score-bar-fill{
+  height:100%;border-radius:4px;
+  transition:width 0.55s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+
+/* ===================== ROUND TIKI ROW ===================== */
+.round-tiki-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 12px;border-radius:10px;margin-bottom:4px;
+  border:1.5px solid rgba(0,0,0,0.07);
+}
+
+.confirm-btn-wrap{margin-top:12px}
+
+/* ===================== ANIMATIONS ===================== */
+@keyframes slideIn{
+  from{opacity:0;transform:translateY(16px) scale(0.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.animate-in{animation:slideIn 0.3s cubic-bezier(0.34,1.12,0.64,1) forwards}
+
+@keyframes pulseBorder{
+  0%,100%{box-shadow:0 5px 18px rgba(0,0,0,0.22), 0 0 0 0 rgba(245,192,24,0.45)}
+  50%{box-shadow:0 5px 18px rgba(0,0,0,0.22), 0 0 0 6px rgba(245,192,24,0.12)}
+}
+.pulse{animation:pulseBorder 2.2s infinite}
+
+@keyframes tropicalSway{
+  0%,100%{transform:rotate(-2deg) scale(1)}
+  50%{transform:rotate(2deg) scale(1.05)}
+}
+@keyframes flameFlicker{
+  0%,100%{opacity:1;transform:scale(1) translateY(0)}
+  33%{opacity:0.85;transform:scale(0.97) translateY(-1px)}
+  66%{opacity:0.9;transform:scale(1.02) translateY(1px)}
+}
+
+/* ===================== WIN SCREEN ===================== */
+.win-trophy{
+  width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(180deg, #FFD830 0%, #C09008 100%);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1rem;
+  box-shadow:0 7px 0 #7A5808, 0 10px 24px rgba(0,0,0,0.35), 0 0 40px rgba(245,192,24,0.5);
+  border:3px solid rgba(255,255,255,0.28);
+  animation:tropicalSway 2.5s ease-in-out infinite;
+}
+.trophy-svg{width:40px;height:40px;fill:#2A1008}
+
+.divider{
+  height:3px;
+  background:linear-gradient(90deg, transparent, var(--wood-light), var(--lemon), var(--wood-light), transparent);
+  margin:1.1rem 0;
+  border-radius:2px;
+}
+
+/* ===================== OUTER WRAPPER ===================== */
+.tt-wrap > *, .tt-wrap-lg > *{position:relative;z-index:1}
+
+/* Game screen header bar */
+#screen-game .tt-wrap-lg > div:first-child{
+  background: linear-gradient(180deg, rgba(58,28,8,0.97) 0%, rgba(42,18,4,0.97) 100%);
+  border-radius:var(--tt-radius) var(--tt-radius) 0 0;
+  padding:0.8rem 1.25rem;
+  border:2.5px solid var(--wood-mid);
+  border-bottom:none;
+  backdrop-filter:blur(6px);
+  box-shadow:0 2px 0 var(--wood-mid);
+}
+#screen-game .tt-wrap-lg > div:first-child *{color:#F5C018 !important}
+#g-current-name{
+  font-family:'Lilita One',cursive !important;
+  font-size:21px !important;
+  letter-spacing:0.4px;
+  text-shadow:0 2px 4px rgba(0,0,0,0.4) !important;
+}
+
+/* Game board area */
+#screen-game .tt-wrap-lg > div:last-child{
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Ccircle cx='25' cy='25' r='1.2' fill='rgba(170,120,50,0.07)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, var(--sand) 0%, var(--sand-deep) 100%);
+  border-radius:0 0 var(--tt-radius) var(--tt-radius);
+  padding:1rem 1.25rem 1.5rem;
+  border:2.5px solid var(--wood-mid);
+  border-top:none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:rgba(0,0,0,0.12);border-radius:3px}
+::-webkit-scrollbar-thumb{background:var(--wood-mid);border-radius:3px}
+
+/* ===================== GAME SCREEN OUTER CARD ===================== */
+#screen-game .tt-wrap-lg{
+  background:transparent;
+  border-radius:var(--tt-radius);
+  overflow:visible;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.35);
+}
+
+/* Setup & other screens outer card */
+#screen-setup .tt-wrap,
+#screen-secret .tt-wrap,
+#screen-round-end .tt-wrap,
+#screen-win .tt-wrap{
+  border-radius:var(--tt-radius);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.35);
+  overflow:hidden;
+}
+
+/* Tropical card corner decorations */
+.tt-body::after{
+  content:'🌺';
+  position:absolute;
+  right:14px;bottom:12px;
+  font-size:20px;opacity:0.18;
+  pointer-events:none;
+}
+/* ===================== SECRET CARD MODAL ===================== */
+#secret-card-modal{
+  display:none;
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(20,8,0,0.72);
+  backdrop-filter:blur(3px);
+  align-items:center;justify-content:center;
+}
+#secret-card-modal.open{display:flex}
+#secret-card-modal-inner{
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='rgba(180,130,60,0.08)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, var(--sand) 0%, var(--sand-deep) 100%);
+  border-radius:var(--tt-radius);
+  border:3px solid var(--wood-mid);
+  box-shadow:0 12px 48px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.5);
+  width:min(96vw,400px);
+  overflow:hidden;
+  animation:slideIn 0.28s cubic-bezier(0.34,1.12,0.64,1) forwards;
+}
+#secret-card-modal-header{
+  background:linear-gradient(180deg,#2A1205 0%,#3D1C08 40%,#2A1205 100%);
+  padding:1rem 1.25rem 0.9rem;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:3px solid var(--wood-light);
+}
+#secret-card-modal-title{
+  font-family:'Lilita One',cursive;
+  font-size:16px;color:#F5C018;letter-spacing:0.5px;
+  text-shadow:2px 2px 0 rgba(0,0,0,0.5), 0 0 16px rgba(245,192,24,0.35);
+  display:flex;align-items:center;gap:8px;
+}
+#secret-card-modal-close{
+  background:linear-gradient(180deg,#C26020,#7A3408);
+  border:2px solid var(--wood-dark);
+  border-radius:var(--tt-radius-sm);
+  color:#FFF3D4;font-size:13px;font-weight:800;
+  cursor:pointer;padding:5px 13px;
+  font-family:'Baloo 2',sans-serif;
+  box-shadow:0 3px 0 #200A00, 0 4px 8px rgba(0,0,0,0.3);
+  transition:all 0.14s ease;
+  text-shadow:0 1px 2px rgba(0,0,0,0.45);
+}
+#secret-card-modal-close:hover{
+  background:linear-gradient(180deg,#D87030,#8B4410);
+  transform:translateY(-1px);
+  box-shadow:0 4px 0 #200A00, 0 6px 12px rgba(0,0,0,0.35);
+}
+#secret-card-modal-body{padding:1.1rem 1.25rem 1.4rem}
+#secret-card-modal-scoring{
+  padding:11px 13px;
+  background:linear-gradient(180deg,#4A2810,#3A1C08);
+  border-radius:var(--tt-radius-sm);border:2px solid var(--wood-dark);
+  font-size:11.5px;color:#C49A5A;line-height:1.6;
+  box-shadow:inset 0 2px 6px rgba(0,0,0,0.3);
+  margin-top:4px;
+}
+#secret-card-modal-scoring strong{color:#F5C842}
+</style>
+
+<div id="app">
+
+<div id="screen-setup" class="screen active">
+  <div class="tt-wrap animate-in">
+    <div class="tt-header">
+      <div class="tt-logo">Tiki <span>Topple</span></div>
+      <div class="tt-subtitle">A turn-based tiki strategy game for 2–4 players</div>
+    </div>
+    <div class="tt-body">
+      <div class="tt-section">
+        <div class="tt-label">How many players?</div>
+        <div style="display:flex;gap:8px" id="player-count-btns">
+          <button class="btn count-btn" onclick="setPlayers(2)">2</button>
+          <button class="btn count-btn" onclick="setPlayers(3)">3</button>
+          <button class="btn count-btn" onclick="setPlayers(4)">4</button>
+        </div>
+      </div>
+      <div class="tt-section">
+        <div class="tt-label">Player names</div>
+        <div id="player-setup-area"></div>
+      </div>
+      <button class="btn primary" id="start-btn" onclick="startGame()" style="display:none;width:100%;padding:10px;font-size:14px">
+        Start game
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="screen-secret" class="screen">
+  <div class="tt-wrap animate-in">
+    <div class="tt-header" style="border-radius:var(--tt-radius)">
+      <div style="font-size:11px;color:#C49A5A;margin-bottom:2px;font-family:'Fredoka One',cursive;letter-spacing:0.5px">Round <span id="sc-round"></span> · Secret card</div>
+      <div class="tt-logo" id="sc-player-name" style="font-size:18px"></div>
+    </div>
+    <div style="padding:1rem 0">
+      <div class="secret-lock" id="sc-cover" onclick="revealSecret()">
+        <div class="lock-icon">
+          <svg class="lock-svg" viewBox="0 0 24 24"><path d="M18 10h-1V7A5 5 0 0 0 7 7v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zM9 7a3 3 0 0 1 6 0v3H9V7zm3 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+        </div>
+        <div style="font-size:14px;font-weight:500;color:var(--tt-text)">Tap to reveal your secret card</div>
+        <div style="font-size:12px;color:var(--tt-muted);margin-top:4px">Make sure others aren't watching</div>
+      </div>
+
+      <div id="sc-card-reveal" style="display:none" class="animate-in">
+        <div class="tt-label">Your secret objectives</div>
+        <div id="sc-tikis" style="margin-bottom:1rem"></div>
+        <div style="padding:12px 14px;background:linear-gradient(180deg,#4A2810,#3A1C08);border-radius:var(--tt-radius-sm);border:2px solid var(--wood-dark);font-size:12px;color:#C49A5A;line-height:1.6;margin-bottom:1rem;box-shadow:inset 0 2px 6px rgba(0,0,0,0.3)">
+          <strong style="color:#F5C842">Scoring reminder:</strong> Secret 1 at position 1 = +9 pts · Secret 2 at pos 1–2 = +5 pts · Secret 3 at pos 1–3 = +2 pts
+        </div>
+        <button class="btn primary" id="sc-next-btn" onclick="nextSecretOrPlay()" style="display:none;width:100%;padding:10px">Got it — I'm ready</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-game" class="screen">
+  <div class="tt-wrap-lg">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0 0.75rem;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.6px;color:var(--tt-muted)">Round <span id="g-round"></span> of 5 · Turn <span id="g-turn"></span></div>
+        <div id="g-current-name" style="font-size:18px;font-weight:500;margin-top:1px"></div>
+      </div>
+      <div style="display:flex;gap:7px">
+        <button class="btn" onclick="openSecretCardModal()" style="font-size:12px">🗿 My card</button>
+        <button class="btn" onclick="showScores()" style="font-size:12px">View scores</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:170px minmax(0,1fr) 190px;gap:12px;align-items:start">
+
+      <div class="board-col">
+        <div class="board-title">Tiki stack</div>
+        <div id="g-board"></div>
+      </div>
+
+      <div>
+        <div class="tt-label">Your action cards</div>
+        <div id="g-cards" style="display:flex;flex-direction:column;gap:5px"></div>
+        <div id="g-action-area" class="confirm-btn-wrap"></div>
+        <div class="log-box" id="g-log">Select a card to play.</div>
+      </div>
+
+      <div>
+        <div class="tt-label">Players</div>
+        <div id="g-players-panel" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="screen-round-end" class="screen">
+  <div class="tt-wrap animate-in">
+    <div class="tt-header" style="border-radius:var(--tt-radius)">
+      <div style="font-size:11px;color:#C49A5A;margin-bottom:2px;font-family:'Fredoka One',cursive;letter-spacing:0.5px">Round complete</div>
+      <div class="tt-logo">Round <span id="re-round"></span> <span style="color:#FAC775">results</span></div>
+    </div>
+    <div style="padding:1rem 0">
+      <div class="tt-label">Final tiki positions</div>
+      <div id="re-board-snapshot" style="margin-bottom:1rem"></div>
+      <div class="tt-label">Round scoring</div>
+      <div id="re-scores" style="display:flex;flex-direction:column;gap:7px;margin-bottom:1rem"></div>
+      <button class="btn primary" id="re-continue-btn" onclick="continueAfterRound()" style="width:100%;padding:10px;font-size:14px"></button>
+    </div>
+  </div>
+</div>
+
+<div id="screen-win" class="screen">
+  <div class="tt-wrap animate-in" style="padding:2rem 0;text-align:center">
+    <div class="win-trophy">
+      <svg class="trophy-svg" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V18H9v2h6v-2h-2v-2.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+    </div>
+    <div style="font-size:28px;font-weight:400;font-family:'Titan One',cursive;margin-bottom:4px;color:var(--wood-dark);text-shadow:1px 2px 0 rgba(0,0,0,0.1)">🏆 Winner!</div>
+    <div id="win-name" style="font-size:17px;margin-bottom:1.5rem"></div>
+    <div id="win-scores" style="max-width:280px;margin:0 auto 1.5rem"></div>
+    <button class="btn primary" onclick="location.reload()" style="padding:10px 28px">Play again</button>
+  </div>
+</div>
+<!-- Secret Card Modal -->
+<div id="secret-card-modal" onclick="closeSecretCardModal(event)">
+  <div id="secret-card-modal-inner">
+    <div id="secret-card-modal-header">
+      <div id="secret-card-modal-title">🗿 Secret Card</div>
+      <button id="secret-card-modal-close" onclick="closeSecretCardModal()">Close ✕</button>
+    </div>
+    <div id="secret-card-modal-body">
+      <div id="secret-card-modal-subtitle" style="font-size:11px;color:var(--tt-muted);font-family:'Fredoka One',cursive;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px"></div>
+      <div id="secret-card-modal-tikis"></div>
+      <div id="secret-card-modal-scoring">
+        <strong>Scoring reminder:</strong> Secret 1 at position 1 = +9 pts · Secret 2 at pos 1–2 = +5 pts · Secret 3 at pos 1–3 = +2 pts
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const TIKI_COLORS = [
+  {name:'Red',bg:'#E24B4A',text:'#FCEBEB'},
+  {name:'Orange',bg:'#D85A30',text:'#FAECE7'},
+  {name:'Yellow',bg:'#EF9F27',text:'#412402'},
+  {name:'Green',bg:'#3B6D11',text:'#EAF3DE'},
+  {name:'Blue',bg:'#185FA5',text:'#E6F1FB'},
+  {name:'Purple',bg:'#7F77DD',text:'#26215C'},
+  {name:'Pink',bg:'#D4537E',text:'#FBEAF0'},
+  {name:'Grey',bg:'#888780',text:'#F1EFE8'},
+  {name:'Brown',bg:'#854F0B',text:'#FAEEDA'},
+];
+const PAWN_COLORS = ['#534AB7','#D85A30','#1D9E75','#D4537E'];
+const PAWN_NAMES = ['Violet','Ember','Jade','Rose'];
+const CARDS = ['Tiki 1 Up','Tiki 2 Up','Tiki 3 Up','Tiki Topple','Tiki Toast'];
+const CARD_ICONS = {'Tiki 1 Up':'1↑','Tiki 2 Up':'2↑','Tiki 3 Up':'3↑','Tiki Topple':'↓↓','Tiki Toast':'✕'};
+const WIN_SCORE = 35;
+let G = {};
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById('screen-'+id);
+  el.classList.add('active');
+  el.querySelectorAll('.animate-in').forEach(e=>{e.style.animation='none';e.offsetHeight;e.style.animation=''});
+}
+
+function setPlayers(n){
+  G.numPlayers=n;
+  document.querySelectorAll('#player-count-btns .btn').forEach((b,i)=>{
+    b.classList.toggle('active', i===n-2);
+  });
+  event.target.classList.add('active');
+  renderSetupInputs(n);
+}
+
+function renderSetupInputs(n){
+  let html='';
+  for(let i=0;i<n;i++){
+    html+=`<div class="player-setup-row">
+      <div class="pawn-dot" style="background:${PAWN_COLORS[i]}"></div>
+      <input class="tt-input" type="text" placeholder="Player ${i+1} name" id="pname-${i}" value="${PAWN_NAMES[i]}">
+    </div>`;
+  }
+  document.getElementById('player-setup-area').innerHTML=html;
+  document.getElementById('start-btn').style.display='flex';
+}
+
+function startGame(){
+  G.players=[];
+  for(let i=0;i<G.numPlayers;i++){
+    const nm=document.getElementById('pname-'+i).value.trim()||`Player ${i+1}`;
+    G.players.push({name:nm,color:PAWN_COLORS[i],score:0,cards:[...CARDS],usedCards:[],secret:null});
+  }
+  assignSecrets();
+  G.round=1; G.globalTurn=0; G.secretIdx=0;
+  initBoard();
+  showNextSecret();
+}
+
+function assignSecrets(){
+  const indices=Array.from({length:9},(_,i)=>i);
+  G.players.forEach(p=>{
+    const pool=[...indices],picks=[];
+    for(let i=0;i<3;i++){const r=Math.floor(Math.random()*pool.length);picks.push(pool.splice(r,1)[0]);}
+    p.secret=picks;
+  });
+}
+
+function initBoard(){
+  const shuffled=[...TIKI_COLORS].sort(()=>Math.random()-0.5);
+  G.board=shuffled.map(t=>({...t,removed:false}));
+  G.removedThisRound=false;
+}
+
+function showNextSecret(){
+  if(G.secretIdx>=G.players.length){G.secretIdx=0;showGame();return;}
+  const p=G.players[G.secretIdx];
+  document.getElementById('sc-round').textContent=G.round;
+  document.getElementById('sc-player-name').textContent=p.name;
+  document.getElementById('sc-player-name').style.color='#FAC775';
+  document.getElementById('sc-card-reveal').style.display='none';
+  document.getElementById('sc-cover').style.display='flex';
+  document.getElementById('sc-next-btn').style.display='none';
+  renderSecretCard(p);
+  show('secret');
+}
+
+function renderSecretCard(p){
+  const labels=['Secret 1','Secret 2','Secret 3'];
+  const pts=['+9 pts if at #1','+5 pts if at #1–2','+2 pts if at #1–3'];
+  const badgeColors=[
+    {bg:'#FAEEDA',text:'#633806'},
+    {bg:'#EEEDFE',text:'#3C3489'},
+    {bg:'#E1F5EE',text:'#085041'},
+  ];
+  let html='';
+  p.secret.forEach((idx,i)=>{
+    const t=TIKI_COLORS[idx];
+    const bc=badgeColors[i];
+    html+=`<div class="secret-tiki-row">
+      <div style="width:34px;height:34px;border-radius:8px;background:${t.bg};flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,0.18)"></div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:500">${t.name}</div>
+        <div style="font-size:11px;color:var(--tt-muted)">${pts[i]}</div>
+      </div>
+      <div class="secret-badge" style="background:${bc.bg};color:${bc.text}">${labels[i]}</div>
+    </div>`;
+  });
+  document.getElementById('sc-tikis').innerHTML=html;
+}
+
+function revealSecret(){
+  document.getElementById('sc-cover').style.display='none';
+  document.getElementById('sc-card-reveal').style.display='block';
+  document.getElementById('sc-next-btn').style.display='flex';
+}
+
+function nextSecretOrPlay(){G.secretIdx++;showNextSecret();}
+
+function currentPlayer(){return G.players[G.globalTurn%G.numPlayers];}
+
+function showGame(){
+  renderBoard(); renderCards(); renderPlayers(); updateGameHeader();
+  document.getElementById('g-action-area').innerHTML='';
+  document.getElementById('g-log').innerHTML='Select a card to play.';
+  show('game');
+  G.selectedCard=null; G.selectedTikiIdx=null;
+}
+
+function updateGameHeader(){
+  const p=currentPlayer();
+  document.getElementById('g-round').textContent=G.round;
+  document.getElementById('g-turn').textContent=G.globalTurn+1;
+  document.getElementById('g-current-name').textContent=p.name+"'s turn";
+  document.getElementById('g-current-name').style.color=p.color;
+}
+
+function renderBoard(){
+  const el=document.getElementById('g-board');
+  const active=G.board.filter(t=>!t.removed);
+  let html='';
+  active.forEach((t,i)=>{
+    const pos=i+1;
+    const selBoardIdx=G.board.indexOf(t);
+    const sel=G.selectedTikiIdx!==null&&selBoardIdx===G.selectedTikiIdx;
+    const posClass=pos===1?'top1':pos<=3?'top3':'';
+    html+=`<div class="tiki-piece" onclick="selectTiki(${selBoardIdx})"
+      style="background:${t.bg}18;border-color:${sel?t.bg:'transparent'}">
+      <div class="tiki-pos ${posClass}">${pos}</div>
+      <div class="tiki-face" style="background:${t.bg};color:${t.text}">${t.name.slice(0,2)}</div>
+      <div class="tiki-name" style="color:var(--tt-text);font-size:13px">${t.name}</div>
+    </div>`;
+  });
+  if(!active.length)html='<p style="font-size:12px;color:var(--tt-muted);text-align:center;padding:8px">All tikis toasted!</p>';
+  el.innerHTML=html;
+}
+
+function renderCards(){
+  const p=currentPlayer();
+  const el=document.getElementById('g-cards');
+  let html='';
+  CARDS.forEach(c=>{
+    const used=p.usedCards.includes(c);
+    const sel=G.selectedCard===c;
+    html+=`<button onclick="selectCard('${c}')" ${used?'disabled':''} class="card-pill${sel?' selected':''}" data-card="${c}">
+      <div class="card-icon">${CARD_ICONS[c]}</div>
+      <span style="${used?'text-decoration:line-through':''}">${c}</span>
+      ${used?'<span style="font-size:11px;color:var(--tt-muted);margin-left:auto">used</span>':''}
+    </button>`;
+  });
+  el.innerHTML=html;
+}
+
+function renderPlayers(){
+  const el=document.getElementById('g-players-panel');
+  let html='';
+  G.players.forEach((p,i)=>{
+    const isCur=G.globalTurn%G.numPlayers===i;
+    const pct=Math.min(100,Math.round(p.score/WIN_SCORE*100));
+    const cardsLeft=5-p.usedCards.length;
+    let pips='';
+    for(let j=0;j<5;j++){
+      const used=p.usedCards.length>j;
+      pips+=`<div class="player-pip" style="background:${used?p.color+'55':p.color};border:1.5px solid ${p.color}"></div>`;
+    }
+    html+=`<div class="player-panel${isCur?' active pulse':''}" style="${isCur?`border-color:${p.color}`:''}">
+      <div class="player-name-row">
+        <div class="player-dot" style="background:${p.color}"></div>
+        <span style="font-size:13px;font-weight:500">${p.name}</span>
+        ${isCur?`<span style="font-size:10px;background:${p.color}22;color:${p.color};padding:1px 6px;border-radius:20px;margin-left:auto">playing</span>`:''}
+      </div>
+      <div class="player-score" style="color:${p.color}">${p.score}</div>
+      <div style="font-size:10px;color:var(--tt-muted)">${cardsLeft} card${cardsLeft!==1?'s':''} left</div>
+      <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%;background:${p.color}"></div></div>
+      <div class="player-pip-row">${pips}</div>
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+
+function selectCard(c){
+  const p=currentPlayer();
+  if(p.usedCards.includes(c))return;
+  G.selectedCard=c; G.selectedTikiIdx=null;
+  renderCards();
+  if(c==='Tiki Toast'){
+    document.getElementById('g-log').innerHTML=`<strong>Tiki Toast</strong> will remove the bottom tiki from the round.`;
+    document.getElementById('g-action-area').innerHTML=`<button class="btn accent" onclick="confirmToast()" style="width:100%;padding:9px">Confirm Tiki Toast</button>`;
+  } else {
+    document.getElementById('g-log').innerHTML=`<strong>${c}</strong> selected — now tap a tiki on the board to target it.`;
+    document.getElementById('g-action-area').innerHTML='';
+  }
+  renderBoard();
+}
+
+function selectTiki(idx){
+  if(!G.selectedCard){document.getElementById('g-log').innerHTML='Select a card first.';return;}
+  if(G.selectedCard==='Tiki Toast')return;
+  const t=G.board[idx];
+  if(t.removed)return;
+  G.selectedTikiIdx=idx;
+  renderBoard();
+  document.getElementById('g-action-area').innerHTML=`<button class="btn accent" onclick="confirmMove()" style="width:100%;padding:9px">Confirm — move ${t.name}</button>`;
+  document.getElementById('g-log').innerHTML=`Moving <strong>${t.name}</strong> with <strong>${G.selectedCard}</strong>.`;
+}
+
+function getActiveStack(){return G.board.reduce((a,t,i)=>(!t.removed?[...a,i]:[...a]),[]);}
+
+function confirmToast(){
+  const stack=getActiveStack();
+  if(!stack.length){document.getElementById('g-log').innerHTML='No tikis left!';return;}
+  const bottomIdx=stack[stack.length-1];
+  G.board[bottomIdx].removed=true;
+  G.removedThisRound=true;
+  finishTurn('Tiki Toast',`<strong>${G.board[bottomIdx].name}</strong> removed from the bottom.`);
+}
+
+function confirmMove(){
+  if(G.selectedTikiIdx===null)return;
+  const card=G.selectedCard;
+  const stack=getActiveStack();
+  const posInStack=stack.indexOf(G.selectedTikiIdx);
+  if(posInStack===-1)return;
+  let steps=0;
+  if(card==='Tiki 1 Up')steps=1;
+  else if(card==='Tiki 2 Up')steps=2;
+  else if(card==='Tiki 3 Up')steps=3;
+  else if(card==='Tiki Topple'){
+    const t=G.board.splice(G.selectedTikiIdx,1)[0];
+    G.board.push(t);
+    finishTurn('Tiki Topple',`<strong>${t.name}</strong> sent to the bottom.`);
+    return;
+  }
+  const newPos=Math.max(0,posInStack-steps);
+  const tikiObj=G.board.splice(G.selectedTikiIdx,1)[0];
+  const newStack=getActiveStack();
+  let insertBefore=newStack[newPos];
+  if(insertBefore===undefined){G.board.push(tikiObj);}
+  else{if(insertBefore>=G.selectedTikiIdx)insertBefore--;G.board.splice(insertBefore,0,tikiObj);}
+  finishTurn(card,`<strong>${tikiObj.name}</strong> moved up ${steps} position${steps>1?'s':''}.`);
+}
+
+function finishTurn(card,logMsg){
+  const p=currentPlayer();
+  p.usedCards.push(card);
+  G.selectedCard=null; G.selectedTikiIdx=null;
+  G.globalTurn++;
+  const totalTurnsPerRound=G.numPlayers*5;
+  const turnsInRound=G.globalTurn-(G.round-1)*totalTurnsPerRound;
+  if(turnsInRound>=totalTurnsPerRound){endRound(logMsg);}
+  else{document.getElementById('g-log').innerHTML=logMsg;showGame();}
+}
+
+function endRound(lastMsg){
+  const roundScores=scoreRound();
+  document.getElementById('re-round').textContent=G.round;
+  renderRoundEndBoard();
+  renderRoundScores(roundScores);
+  const winner=G.players.find(p=>p.score>=WIN_SCORE);
+  document.getElementById('re-continue-btn').textContent=winner?'See final results':'Start next round';
+  show('round-end');
+}
+
+function scoreRound(){
+  const stack=getActiveStack();
+  const results=[];
+  G.players.forEach(p=>{
+    let r1=0,r2=0,r3=0;
+    const pos1=stackPosOf(p.secret[0]);
+    const pos2=stackPosOf(p.secret[1]);
+    const pos3=stackPosOf(p.secret[2]);
+    if(pos1===1)r1=9;
+    if(pos2>=1&&pos2<=2)r2=5;
+    if(pos3>=1&&pos3<=3)r3=2;
+    const earned=r1+r2+r3;
+    p.score+=earned;
+    results.push({player:p,earned,r1,r2,r3,pos1,pos2,pos3});
+  });
+  return results;
+}
+
+function stackPosOf(colorIdx){
+  const stack=getActiveStack();
+  const target=TIKI_COLORS[colorIdx].name;
+  for(let i=0;i<stack.length;i++){if(G.board[stack[i]].name===target)return i+1;}
+  return -1;
+}
+
+function renderRoundEndBoard(){
+  const stack=getActiveStack();
+  let html='<div style="display:flex;flex-direction:column;gap:3px">';
+  stack.forEach((idx,i)=>{
+    const t=G.board[idx];
+    const pos=i+1;
+    const posClass=pos===1?'top1':pos<=3?'top3':'';
+    html+=`<div class="round-tiki-row" style="background:${t.bg}18">
+      <div class="tiki-pos ${posClass}" style="flex-shrink:0">${pos}</div>
+      <div style="width:22px;height:22px;border-radius:5px;background:${t.bg};flex-shrink:0"></div>
+      <div style="font-size:13px;font-weight:500">${t.name}</div>
+    </div>`;
+  });
+  html+='</div>';
+  document.getElementById('re-board-snapshot').innerHTML=html;
+}
+
+function renderRoundScores(results){
+  const sorted=[...results].sort((a,b)=>b.earned-a.earned);
+  let html='';
+  sorted.forEach(r=>{
+    const p=r.player;
+    const pct=Math.min(100,Math.round(p.score/WIN_SCORE*100));
+    html+=`<div class="player-panel" style="padding:12px 14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:7px">
+          <div class="player-dot" style="background:${p.color}"></div>
+          <span style="font-size:13px;font-weight:500">${p.name}</span>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:4px">
+          <span style="font-size:13px;color:var(--tt-muted)">+${r.earned}</span>
+          <span style="font-size:16px;font-weight:500;color:${p.color}">${p.score}</span>
+          <span style="font-size:11px;color:var(--tt-muted)">/ ${WIN_SCORE}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;font-size:11px;color:var(--tt-muted);margin-bottom:6px">
+        <span>S1 @${r.pos1>0?r.pos1:'—'} → <strong style="color:${r.r1?'var(--tt-gold)':'var(--tt-muted)'}">${r.r1>0?'+'+r.r1:'0'}</strong></span>
+        <span>·</span>
+        <span>S2 @${r.pos2>0?r.pos2:'—'} → <strong style="color:${r.r2?'var(--tt-gold)':'var(--tt-muted)'}">${r.r2>0?'+'+r.r2:'0'}</strong></span>
+        <span>·</span>
+        <span>S3 @${r.pos3>0?r.pos3:'—'} → <strong style="color:${r.r3?'var(--tt-gold)':'var(--tt-muted)'}">${r.r3>0?'+'+r.r3:'0'}</strong></span>
+      </div>
+      <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%;background:${p.color}"></div></div>
+    </div>`;
+  });
+  document.getElementById('re-scores').innerHTML=html;
+}
+
+function continueAfterRound(){
+  const winner=G.players.find(p=>p.score>=WIN_SCORE);
+  if(winner){showWin(winner);return;}
+  G.round++;
+  G.players.forEach(p=>{p.usedCards=[];p.cards=[...CARDS];});
+  initBoard(); G.secretIdx=0; showNextSecret();
+}
+
+function showWin(winner){
+  document.getElementById('win-name').textContent=winner.name+' wins!';
+  document.getElementById('win-name').style.color=winner.color;
+  const sorted=[...G.players].sort((a,b)=>b.score-a.score);
+  let html='<div style="display:flex;flex-direction:column;gap:6px">';
+  sorted.forEach((p,i)=>{
+    const medal=['🥇','🥈','🥉',''][i]||'';
+    html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:var(--tt-surface2);border-radius:var(--tt-radius-sm);border:0.5px solid var(--tt-border)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="player-dot" style="background:${p.color}"></div>
+        <span style="font-weight:500;color:${p.color}">${p.name}</span>
+      </div>
+      <span style="font-weight:500">${p.score} pts</span>
+    </div>`;
+  });
+  html+='</div>';
+  document.getElementById('win-scores').innerHTML=html;
+  show('win');
+}
+
+function showScores(){
+  const sorted=[...G.players].sort((a,b)=>b.score-a.score);
+  alert('Scores:\n'+sorted.map(p=>`${p.name}: ${p.score} pts`).join('\n'));
+}
+// ===================== SECRET CARD MODAL =====================
+function openSecretCardModal(){
+  const p = currentPlayer();
+  // Populate subtitle
+  document.getElementById('secret-card-modal-subtitle').textContent =
+    p.name + "'s secret objectives";
+  // Reuse existing renderSecretCard logic, but target modal element
+  const labels = ['Secret 1','Secret 2','Secret 3'];
+  const pts = ['+9 pts if at #1','+5 pts if at #1–2','+2 pts if at #1–3'];
+  const badgeColors = [
+    {bg:'#FAEEDA',text:'#633806'},
+    {bg:'#EEEDFE',text:'#3C3489'},
+    {bg:'#E1F5EE',text:'#085041'},
+  ];
+  let html = '';
+  p.secret.forEach((idx, i) => {
+    const t = TIKI_COLORS[idx];
+    const bc = badgeColors[i];
+    html += `<div class="secret-tiki-row">
+      <div style="width:34px;height:34px;border-radius:8px;background:${t.bg};flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,0.18)"></div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:500">${t.name}</div>
+        <div style="font-size:11px;color:var(--tt-muted)">${pts[i]}</div>
+      </div>
+      <div class="secret-badge" style="background:${bc.bg};color:${bc.text}">${labels[i]}</div>
+    </div>`;
+  });
+  document.getElementById('secret-card-modal-tikis').innerHTML = html;
+  document.getElementById('secret-card-modal').classList.add('open');
+}
+
+function closeSecretCardModal(event){
+  // Close on backdrop click or direct call (close button)
+  if(event && event.target !== document.getElementById('secret-card-modal')) return;
+  document.getElementById('secret-card-modal').classList.remove('open');
+}
+setPlayers(2);
+</script>
